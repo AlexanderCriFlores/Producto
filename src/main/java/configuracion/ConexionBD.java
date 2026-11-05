@@ -17,14 +17,16 @@ public class ConexionBD {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             this.conexion = DriverManager.getConnection(URL, USER, PASSWORD);
-        } catch (ClassNotFoundException | SQLException e) {
-            System.err.println("Error en la conexión a la Base de Datos: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            System.err.println("Error: No se encontró el Driver de MySQL: " + e.getMessage());
+        } catch (SQLException e) {
+            System.err.println("Error de conexión SQL: " + e.getMessage());
         }
     }
 
     public static synchronized ConexionBD getInstancia() {
         try {
-            if (instancia == null || instancia.getConexion().isClosed()) {
+            if (instancia == null || instancia.conexion == null || instancia.conexion.isClosed()) {
                 instancia = new ConexionBD();
             }
         } catch (SQLException e) {

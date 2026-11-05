@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Cita;
+import model.DocumentoVenta;
 
 @WebServlet("/CitaServlet")
 public class CitaServlet extends HttpServlet {
@@ -17,11 +18,8 @@ public class CitaServlet extends HttpServlet {
         List<Cita> lista = (List<Cita>) request.getServletContext().getAttribute("listaCitas");
         if (lista == null) {
             lista = new ArrayList<>();
-            lista.add(new Cita(1, "Juan Pérez", "71234567", "Cardiología", "Dr. Carlos Mendoza", "2026-10-25", "09:00", "Pendiente"));
-            lista.add(new Cita(2, "María López", "45678912", "Pediatría", "Dra. Ana Torres", "2026-10-20", "10:30", "Atendida"));
-            lista.add(new Cita(3, "Roberto Gómez", "12345678", "Medicina General", "Dr. Luis Silva", "2026-10-21", "11:00", "Atendida"));
             request.getServletContext().setAttribute("listaCitas", lista);
-            request.getServletContext().setAttribute("contadorId", 4);
+            request.getServletContext().setAttribute("contadorId", 1);
         }
         return lista;
     }
@@ -68,10 +66,28 @@ public class CitaServlet extends HttpServlet {
         String fecha = request.getParameter("fecha");
         String hora = request.getParameter("hora");
 
-        Cita nuevaCita = new Cita(contadorId++, paciente, dni, especialidad, medico, fecha, hora, "Pendiente");
+        Cita nuevaCita = new Cita(contadorId, paciente, dni, especialidad, medico, fecha, hora, "Pendiente");
         lista.add(nuevaCita);
 
-        request.getServletContext().setAttribute("contadorId", contadorId);
+        double precioConsulta = 60.00;
+        if ("Cardiología".equals(especialidad)) {
+            precioConsulta = 120.00;
+        } else if ("Pediatría".equals(especialidad)) {
+            precioConsulta = 90.00;
+        }
+
+        List<DocumentoVenta> listaDocs = (List<DocumentoVenta>) request.getServletContext().getAttribute("listaDocumentos");
+        if (listaDocs == null) {
+            listaDocs = new ArrayList<>();
+        }
+        int idDoc = listaDocs.size() + 1;
+        String numeroBoleta = String.format("%06d", 100 + idDoc);
+        
+        DocumentoVenta nuevoDoc = new DocumentoVenta(idDoc, "Boleta", "B001", numeroBoleta, fecha, paciente, precioConsulta);
+        listaDocs.add(nuevoDoc);
+        
+        request.getServletContext().setAttribute("contadorId", contadorId + 1);
+        request.getServletContext().setAttribute("listaDocumentos", listaDocs);
 
         response.sendRedirect("dashboard.jsp?vista=citas");
     }
