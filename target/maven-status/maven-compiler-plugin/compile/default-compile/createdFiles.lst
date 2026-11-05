@@ -1,0 +1,16 @@
+model\SolicitudServicio.class
+configuracion\ConexionBD.class
+model\DocumentoVenta.class
+controlador\CitaServlet.class
+model\Paciente.class
+model\Usuario.class
+com\mycompany\proyecto\resources\JakartaEE10Resource.class
+dao\SolicitudServicioDAO.class
+controlador\GestionServlet.class
+model\Cita.class
+dao\PacienteDAO.class
+com\mycompany\proyecto\JakartaRestConfiguration.class
+model\Medicamento.class
+dao\MedicamentoDAO.class
+controlador\LoginServlet.class
+dao\DocumentoVentaDAO.class
